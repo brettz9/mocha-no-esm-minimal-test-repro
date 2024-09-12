@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "name": "mocha-no-esm-minimal-test-repro",
+  "version": "0.1.0",
+  "author": "Brett Zamir <brettz9@yahoo.com>",
+  "description": "Minimal reproduction for Mocha missing ESM",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "static -p 8000",
+    "test": "open-cli http://localhost:8000/test/index.html && npm start"
+  },
+  "devDependencies": {
+    "@brettz9/node-static": "^0.1.1",
+    "chai": "^5.1.1",
+    "mocha": "^10.7.3",
+    "open-cli": "^8.0.0"
+  }
+}
