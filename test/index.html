@@ -13,8 +13,8 @@
         import * as mocha from '../../node_modules/mocha/mocha.js';
         console.log('mocha', Object.keys(mocha)); // Empty
 
-        await import('./unit-test.js');
         mocha.setup('bdd');
+        await import('./unit-test.js');
         mocha.run();
         </script>
     </body>
