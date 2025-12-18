@@ -10,12 +10,12 @@
         <div id="mocha"></div>
 
         <script type="module">
-        import {mocha} from '../node_modules/mocha/mocha.mjs';
+        import {mocha, setup, run} from '../node_modules/mocha/mocha.mjs';
 
-        mocha.setup('bdd');
+        setup('bdd');
 
         await import('./unit-test.js');
-        mocha.run();
+        run();
         </script>
     </body>
 </html>
