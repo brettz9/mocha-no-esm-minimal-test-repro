@@ -8,12 +8,13 @@
   "main": "src/index.js",
   "scripts": {
     "start": "static -p 8000",
+    "mocha": "mocha test/test-node.js",
     "test": "open-cli http://localhost:8000/test/index.html && npm start"
   },
   "devDependencies": {
     "@brettz9/node-static": "^0.1.1",
     "chai": "^5.1.1",
-    "mocha": "brettz9/mocha#esm-browser-dist",
+    "mocha": "brettz9/mocha#esm-browser-dynamic-setup-dist",
     "open-cli": "^8.0.0"
   }
 }
