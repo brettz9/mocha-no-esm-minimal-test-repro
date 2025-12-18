@@ -10,10 +10,10 @@
         <div id="mocha"></div>
 
         <script type="module">
-        import * as mocha from '../node_modules/mocha/mocha.js';
-        console.log('mocha', Object.keys(mocha)); // Empty
+        import * as mocha from '../node_modules/mocha/mocha.mjs';
 
         mocha.setup('bdd');
+
         await import('./unit-test.js');
         mocha.run();
         </script>

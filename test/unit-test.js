@@ -1,4 +1,4 @@
-import {describe, it} from '../node_modules/mocha/mocha.js';
+import {describe, it} from '../node_modules/mocha/mocha.mjs';
 import {expect} from '../node_modules/chai/chai.js';
 
 describe('My suite', function () {

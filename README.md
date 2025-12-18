@@ -3,6 +3,7 @@
 1. Run
 
 ```sh
+npm install
 npm test
 ```
 

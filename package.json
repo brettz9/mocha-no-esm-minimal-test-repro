@@ -13,7 +13,7 @@
   "devDependencies": {
     "@brettz9/node-static": "^0.1.1",
     "chai": "^5.1.1",
-    "mocha": "^10.7.3",
+    "mocha": "brettz9/mocha#esm-browser-dist",
     "open-cli": "^8.0.0"
   }
 }
