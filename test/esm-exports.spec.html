@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mocha ESM Exports Test</title>
+  <link rel="stylesheet" href="../node_modules/mocha/mocha.css"/>
+</head>
+<body>
+  <div id="mocha"></div>
+  <script type="module">
+    import Mocha, {
+      mocha,
+      utils,
+      interfaces,
+      reporters,
+      Runnable,
+      Context,
+      Runner,
+      Suite,
+      Hook,
+      Test,
+      describe,
+      it,
+      before,
+      after
+    } from '../node_modules/mocha/mocha.mjs';
+
+    // Setup mocha
+    mocha.setup('bdd');
+
+    describe('ESM Exports', function() {
+      describe('Mocha class', function() {
+        it('should be a constructor function', function() {
+          if (typeof Mocha !== 'function') {
+            throw new Error('Mocha is not a function');
+          }
+        });
+
+        it('should create new Mocha instances', function() {
+          const instance = new Mocha();
+          if (!(instance instanceof Mocha)) {
+            throw new Error('Failed to create Mocha instance');
+          }
+        });
+      });
+
+      describe('utils', function() {
+        it('should identify string type', function() {
+          const type = utils.type('hello');
+          if (type !== 'string') {
+            throw new Error('Expected "string", got "' + type + '"');
+          }
+        });
+
+        it('should identify array type', function() {
+          const type = utils.type([1, 2, 3]);
+          if (type !== 'array') {
+            throw new Error('Expected "array", got "' + type + '"');
+          }
+        });
+
+        it('should identify object type', function() {
+          const type = utils.type({key: 'value'});
+          if (type !== 'object') {
+            throw new Error('Expected "object", got "' + type + '"');
+          }
+        });
+
+        it('should escape HTML in strings', function() {
+          const escaped = utils.escape('<script>alert("xss")<\/script>');
+          // Check that the original tags are not present
+          if (escaped.indexOf('<script>') !== -1) {
+            throw new Error('HTML was not escaped properly');
+          }
+          // Check that HTML entities were created (&#60; is numeric entity for <)
+          if (escaped.indexOf('&#') === -1 && escaped.indexOf('&lt;') === -1) {
+            throw new Error('HTML entities not created');
+          }
+        });
+      });
+
+      describe('interfaces', function() {
+        it('should apply BDD interface to a suite', function() {
+          const testSuite = new Suite('BDD Test Suite');
+          const testContext = {};
+
+          // Apply the BDD interface
+          interfaces.bdd(testSuite);
+
+          // Trigger the pre-require event to set up the context
+          testSuite.emit('pre-require', testContext, 'test-file.js', mocha);
+
+          // Verify BDD interface methods are added to the context
+          if (typeof testContext.describe !== 'function') {
+            throw new Error('BDD interface did not add describe method');
+          }
+          if (typeof testContext.it !== 'function') {
+            throw new Error('BDD interface did not add it method');
+          }
+          if (typeof testContext.before !== 'function') {
+            throw new Error('BDD interface did not add before method');
+          }
+        });
+
+        it('should apply TDD interface to a suite', function() {
+          const testSuite = new Suite('TDD Test Suite');
+          const testContext = {};
+
+          // Apply the TDD interface
+          interfaces.tdd(testSuite);
+
+          // Trigger the pre-require event to set up the context
+          testSuite.emit('pre-require', testContext, 'test-file.js', mocha);
+
+          // Verify TDD interface methods are added to the context
+          if (typeof testContext.suite !== 'function') {
+            throw new Error('TDD interface did not add suite method');
+          }
+          if (typeof testContext.test !== 'function') {
+            throw new Error('TDD interface did not add test method');
+          }
+        });
+      });
+
+      describe('reporters', function() {
+        it('should create Spec reporter instance', function() {
+          const suite = new Suite('Reporter Test Suite');
+          const runner = new Runner(suite);
+          const reporter = new reporters.Spec(runner);
+
+          if (!reporter) {
+            throw new Error('Failed to create Spec reporter');
+          }
+        });
+
+        it('should create JSON reporter instance', function() {
+          const suite = new Suite('Reporter Test Suite');
+          const runner = new Runner(suite);
+          const reporter = new reporters.JSON(runner);
+
+          if (!reporter) {
+            throw new Error('Failed to create JSON reporter');
+          }
+        });
+      });
+
+      describe('Suite', function() {
+        it('should create test suites', function() {
+          const suite = new Suite('Test Suite');
+          if (!(suite instanceof Suite)) {
+            throw new Error('Failed to create Suite instance');
+          }
+          if (suite.title !== 'Test Suite') {
+            throw new Error('Suite title not set correctly');
+          }
+        });
+
+        it('should add tests to suite', function() {
+          const suite = new Suite('Test Suite');
+          const test = new Test('test case', function() {});
+          suite.addTest(test);
+          if (suite.tests.length !== 1) {
+            throw new Error('Test not added to suite');
+          }
+        });
+      });
+
+      describe('Test', function() {
+        it('should create test cases', function() {
+          const test = new Test('my test', function() {});
+          if (!(test instanceof Test)) {
+            throw new Error('Failed to create Test instance');
+          }
+          if (test.title !== 'my test') {
+            throw new Error('Test title not set correctly');
+          }
+        });
+      });
+
+      describe('Hook', function() {
+        it('should create hooks', function() {
+          const hook = new Hook('my hook', function() {});
+          if (!(hook instanceof Hook)) {
+            throw new Error('Failed to create Hook instance');
+          }
+          if (hook.title !== 'my hook') {
+            throw new Error('Hook title not set correctly, got: ' + hook.title);
+          }
+          if (hook.type !== 'hook') {
+            throw new Error('Hook type not set correctly');
+          }
+        });
+      });
+
+      describe('Runnable', function() {
+        it('should be the base class for Test and Hook', function() {
+          const test = new Test('test', function() {});
+          const hook = new Hook('hook', function() {});
+          if (!(test instanceof Runnable)) {
+            throw new Error('Test is not instance of Runnable');
+          }
+          if (!(hook instanceof Runnable)) {
+            throw new Error('Hook is not instance of Runnable');
+          }
+        });
+      });
+
+      describe('Context', function() {
+        it('should create test contexts', function() {
+          const context = new Context();
+          if (!(context instanceof Context)) {
+            throw new Error('Failed to create Context instance');
+          }
+        });
+
+        it('should support timeout configuration', function() {
+          const context = new Context();
+          const test = new Test('timeout test', function() {});
+
+          // Set the runnable for the context
+          context.runnable(test);
+
+          // Now set and get timeout
+          context.timeout(5000);
+          if (context.timeout() !== 5000) {
+            throw new Error('Timeout not set correctly');
+          }
+        });
+      });
+
+      describe('Runner', function() {
+        it('should create test runners', function() {
+          const suite = new Suite('Root');
+          const runner = new Runner(suite);
+          if (!(runner instanceof Runner)) {
+            throw new Error('Failed to create Runner instance');
+          }
+        });
+      });
+
+      describe('mocha instance', function() {
+        it('should have setup method', function() {
+          if (typeof mocha.setup !== 'function') {
+            throw new Error('mocha.setup is not a function');
+          }
+        });
+
+        it('should have run method', function() {
+          if (typeof mocha.run !== 'function') {
+            throw new Error('mocha.run is not a function');
+          }
+        });
+      });
+    });
+
+    // Run the tests
+    mocha.run();
+  </script>
+</body>
